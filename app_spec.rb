@@ -29,14 +29,15 @@ describe Sinatra::Application do
 
     get '/read/123456/2m'
     last_response.status.should == 200
+    JSON.parse(last_response.body).should == {'updated_at' => now.to_i, 'ip' => last_request.ip, 'status' => 'current'}
     
     Timecop.travel 130
     get '/read/123456/2m'
     last_response.status.should == 500
+    JSON.parse(last_response.body).should == {'updated_at' => now.to_i, 'ip' => last_request.ip, 'status' => 'expired'}
 
     get '/read/123456/5m'
     last_response.status.should == 200
-    
-    JSON.parse(last_response.body).should == {'updated_at' => now.to_i, 'ip' => last_request.ip}
+    JSON.parse(last_response.body).should == {'updated_at' => now.to_i, 'ip' => last_request.ip, 'status' => 'current'}
   end
 end

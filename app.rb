@@ -17,10 +17,8 @@ end
 get '/read/:id/:duration' do
   record = STORE[params[:id]]
   duration = ChronicDuration.parse(params[:duration])
+  expired = Time.now.to_i - record[:updated_at] > duration
   
-  if Time.now.to_i - record[:updated_at] > duration
-    status 500
-  end
-  
-  record.to_json
+  status 500 if expired
+  record.merge(status: expired ? 'expired' : 'current').to_json
 end
