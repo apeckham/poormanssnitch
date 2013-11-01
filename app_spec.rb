@@ -9,6 +9,6 @@ describe Sinatra::Application do
   
   it 'says hello' do
     get '/'
-    last_response.body.should == 'Hello world'
+    last_response.body.should == 'poormanssnitch'
   end
 end
