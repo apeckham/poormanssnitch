@@ -9,4 +9,5 @@ gem 'chronic_duration'
 group :test do
   gem 'rspec'
   gem 'rack-test'
+  gem 'timecop'
 end
