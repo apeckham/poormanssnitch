@@ -7,3 +7,7 @@ In Pingdom or Wormly, monitor this URL:
 https://deadmanssnitch.herokuapp.com/read/YourCronJob/2h
 
 The "read" URL will return a 500 if the "write" URL hasn't been hit within the last two hours. Change "2h" to "2d" or "two weeks" -- that string is parsed by chronic_duration.
+
+
+
+Todo -- use redis instead of memory so data survives app restart
