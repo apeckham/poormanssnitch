@@ -15,29 +15,29 @@ describe Sinatra::Application do
     last_response.body.should == 'poormanssnitch'
   end
   
-  it 'updates' do
-    get '/update/123456'
+  it 'writes' do
+    get '/write/123456'
     last_response.status.should == 200
     last_response.body.should == 'ok'
-    STORE['123456'].should == {updated_at: Time.now.to_i, ip: last_request.ip}
+    STORE['123456'].should == {writed_at: Time.now.to_i, ip: last_request.ip}
   end
   
   it 'reads' do
     now = Time.now
-    get '/update/123456'
+    get '/write/123456'
     last_response.status.should == 200
 
     get '/read/123456/2m'
     last_response.status.should == 200
-    JSON.parse(last_response.body).should == {'updated_at' => now.to_i, 'ip' => last_request.ip, 'status' => 'current'}
+    JSON.parse(last_response.body).should == {'writed_at' => now.to_i, 'ip' => last_request.ip, 'status' => 'current'}
     
     Timecop.travel 130
     get '/read/123456/2m'
     last_response.status.should == 500
-    JSON.parse(last_response.body).should == {'updated_at' => now.to_i, 'ip' => last_request.ip, 'status' => 'expired'}
+    JSON.parse(last_response.body).should == {'writed_at' => now.to_i, 'ip' => last_request.ip, 'status' => 'expired'}
 
     get '/read/123456/5m'
     last_response.status.should == 200
-    JSON.parse(last_response.body).should == {'updated_at' => now.to_i, 'ip' => last_request.ip, 'status' => 'current'}
+    JSON.parse(last_response.body).should == {'writed_at' => now.to_i, 'ip' => last_request.ip, 'status' => 'current'}
   end
 end
