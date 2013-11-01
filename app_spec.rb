@@ -1,4 +1,5 @@
 require 'rspec'
+require 'rack/test'
 require File.dirname(__FILE__) + '/app'
 
 describe Sinatra::Application do
@@ -8,6 +9,6 @@ describe Sinatra::Application do
   
   it 'says hello' do
     get '/'
-    last_response.body.should == 'hello world'
+    last_response.body.should == 'Hello world'
   end
 end
