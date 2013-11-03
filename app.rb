@@ -21,5 +21,5 @@ get '/read/:id/:duration' do
   expired = age > duration
   
   status 500 if expired
-  record.merge(age: age, status: expired ? 'expired' : 'current').to_json
+  record.merge(age: age, expired: expired).to_json
 end

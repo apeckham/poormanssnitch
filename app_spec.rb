@@ -26,18 +26,19 @@ describe Sinatra::Application do
     now = Time.now
     get '/write/123456'
     last_response.status.should == 200
+    last_response.body.should == 'ok'
 
     get '/read/123456/2m'
     last_response.status.should == 200
-    JSON.parse(last_response.body).should == {'updated_at' => now.to_i, 'ip' => last_request.ip, 'status' => 'current', 'age' => 0}
+    JSON.parse(last_response.body).should == {'updated_at' => now.to_i, 'ip' => last_request.ip, 'expired' => false, 'age' => 0}
     
     Timecop.travel 130
     get '/read/123456/2m'
     last_response.status.should == 500
-    JSON.parse(last_response.body).should == {'updated_at' => now.to_i, 'ip' => last_request.ip, 'status' => 'expired', 'age' => 130}
+    JSON.parse(last_response.body).should == {'updated_at' => now.to_i, 'ip' => last_request.ip, 'expired' => true, 'age' => 130}
 
     get '/read/123456/5m'
     last_response.status.should == 200
-    JSON.parse(last_response.body).should == {'updated_at' => now.to_i, 'ip' => last_request.ip, 'status' => 'current', 'age' => 130}
+    JSON.parse(last_response.body).should == {'updated_at' => now.to_i, 'ip' => last_request.ip, 'expired' => false, 'age' => 130}
   end
 end
