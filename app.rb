@@ -24,5 +24,6 @@ get '/read/:id/:duration' do
   expired = age > duration
   
   status 410 if expired
+  content_type 'application/json'
   record.merge(age: age, expired: expired).to_json
 end
