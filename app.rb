@@ -10,20 +10,22 @@ get '/' do
 end
 
 get '/write/:id' do
-  STORE[params[:id]] = {updated_at: Time.now.to_i, ip: request.ip}
+  STORE[params[:id]] = Time.now.to_i
   status 201
-  'ok'
+  'updated'
 end
 
-get '/read/:id/:duration' do
-  record = STORE[params[:id]]
-  status 404 and return unless record
+get '/read/:id/:max_age' do
+  updated_at = STORE[params[:id]]
+  status 404 and return unless updated_at
   
-  duration = ChronicDuration.parse(params[:duration])
-  age = Time.now.to_i - record[:updated_at]
-  expired = age > duration
+  max_age = ChronicDuration.parse params[:max_age]
+  age = Time.now.to_i - updated_at
   
-  status 410 if expired
-  content_type 'application/json'
-  record.merge(age: age, expired: expired).to_json
+  if age > max_age
+    status 410
+    "expired, age=#{age}"
+  else
+    "current, age=#{age}"
+  end
 end

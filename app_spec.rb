@@ -18,28 +18,28 @@ describe Sinatra::Application do
   it 'writes' do
     get '/write/123456'
     last_response.status.should == 201
-    last_response.body.should == 'ok'
-    STORE['123456'].should == {updated_at: Time.now.to_i, ip: last_request.ip}
+    last_response.body.should == 'updated'
+    STORE['123456'].should == Time.now.to_i
   end
   
   it 'reads' do
     now = Time.now
     get '/write/123456'
     last_response.status.should == 201
-    last_response.body.should == 'ok'
+    last_response.body.should == 'updated'
 
     get '/read/123456/2m'
     last_response.status.should == 200
-    JSON.parse(last_response.body).should == {'updated_at' => now.to_i, 'ip' => last_request.ip, 'expired' => false, 'age' => 0}
+    last_response.body.should == 'current, age=0'
     
     Timecop.travel 130
     get '/read/123456/2m'
     last_response.status.should == 410
-    JSON.parse(last_response.body).should == {'updated_at' => now.to_i, 'ip' => last_request.ip, 'expired' => true, 'age' => 130}
+    last_response.body.should == 'expired, age=130'
 
     get '/read/123456/5m'
     last_response.status.should == 200
-    JSON.parse(last_response.body).should == {'updated_at' => now.to_i, 'ip' => last_request.ip, 'expired' => false, 'age' => 130}
+    last_response.body.should == 'current, age=130'
   end
   
   it 'returns a 404 when record is missing' do
