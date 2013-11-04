@@ -1,13 +1,16 @@
-Cheap recreation of deadmanssnitch, which alerts you when a cron job doesn't succeed as expected.
+Cheap recreation of Dead Man's Snitch, which alerts you when a cron job doesn't succeed as expected.
 
 At the end of a cron job, curl a URL like this:
-https://deadmanssnitch.herokuapp.com/write/YourCronJob
+# curl https://<your_poor_mans_snitch>.herokuapp.com/write/your_cron_job
 
 In Pingdom or Wormly, monitor this URL:
-https://deadmanssnitch.herokuapp.com/read/YourCronJob/2h
+https://<your_poor_mans_snitch>.herokuapp.com/read/your_cron_job/2h
 
-The "read" URL will return a 500 if the "write" URL hasn't been hit within the last two hours. Change "2h" to "2d" or "two weeks" -- that string is parsed by chronic_duration.
+The "read" URL will return a 500 if the "write" URL hasn't been hit within the last two hours.
 
-
-
-Todo -- use redis instead of memory so data survives app restart
+To run on Heroku:
+# git clone https://github.com/apeckham/poormanssnitch.git
+# cd poormanssnitch
+# heroku create mypoormanssnitch
+# heroku addons:add rediscloud
+# git push heroku master
