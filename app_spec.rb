@@ -23,7 +23,6 @@ describe Sinatra::Application do
   end
   
   it 'reads' do
-    now = Time.now
     get '/write/123456'
     last_response.status.should == 201
     last_response.body.should == 'updated'
@@ -51,5 +50,19 @@ describe Sinatra::Application do
     get '/write/123456789'
     get '/read/123456789/whatever'
     last_response.status.should == 500
+  end
+  
+  it 'returns a 500 when time is 0s' do
+    get '/write/1234567890'
+    get '/read/1234567890/0s'
+    last_response.status.should == 500
+  end
+  
+  it 'allows posts' do
+    post '/write/asdfasdf'
+    last_response.status.should == 201
+
+    post '/read/asdfasdf/5s'
+    last_response.status.should == 200
   end
 end

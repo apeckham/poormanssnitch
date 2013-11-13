@@ -10,17 +10,22 @@ else
   Moneta.new(:Memory)
 end
 
+def self.get_or_post(url, &block)
+  get(url, &block)
+  post(url, &block)
+end
+
 get '/' do
   'poormanssnitch'
 end
 
-get '/write/:id' do
+get_or_post '/write/:id' do
   STORE[params[:id]] = Time.now.to_i
   status 201
   'updated'
 end
 
-get '/read/:id/:max_age' do
+get_or_post '/read/:id/:max_age' do
   updated_at = STORE[params[:id]]
   status 404 and return unless updated_at
   
