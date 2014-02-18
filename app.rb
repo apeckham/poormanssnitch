@@ -3,8 +3,8 @@ require 'moneta'
 require 'chronic_duration'
 require 'json'
 
-STORE = if ENV['REDISCLOUD_URL']
-  uri = URI.parse ENV['REDISCLOUD_URL']
+STORE = if ENV['REDIS_URL']
+  uri = URI.parse ENV['REDIS_URL']
   Moneta.new(:Redis, host: uri.host, port: uri.port, password: uri.password)
 else
   Moneta.new(:Memory)
